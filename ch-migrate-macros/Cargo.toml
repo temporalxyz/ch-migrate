@@ -1,0 +1,20 @@
+[package]
+name = "ch-migrate-macros"
+description = "Proc macro for embedding ClickHouse migrations at compile time"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+readme.workspace = true
+keywords.workspace = true
+categories.workspace = true
+
+[lib]
+proc-macro = true
+
+[dependencies]
+ch-migrate-core = { path = "../ch-migrate-core", version = "0.1.0" }
+quote = "1"
+proc-macro2 = "1"
+syn = "2"

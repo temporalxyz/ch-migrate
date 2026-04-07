@@ -1,0 +1,18 @@
+[workspace]
+resolver = "2"
+members = [
+    "ch-migrate-core",
+    "ch-migrate-macros",
+    "ch-migrate",
+    "ch-migrate-cli",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+repository = "https://github.com/jkbpvsc/ch-migrate"
+homepage = "https://github.com/jkbpvsc/ch-migrate"
+readme = "README.md"
+keywords = ["clickhouse", "migration", "schema", "database", "sql"]
+categories = ["database"]

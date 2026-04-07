@@ -1,0 +1,15 @@
+[package]
+name = "ch-migrate"
+description = "ClickHouse schema migration library and proc macro, inspired by sqlx::migrate!"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+readme.workspace = true
+keywords.workspace = true
+categories.workspace = true
+
+[dependencies]
+ch-migrate-core = { path = "../ch-migrate-core", version = "0.1.0" }
+ch-migrate-macros = { path = "../ch-migrate-macros", version = "0.1.0" }

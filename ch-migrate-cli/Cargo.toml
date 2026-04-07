@@ -1,0 +1,25 @@
+[package]
+name = "ch-migrate-cli"
+description = "CLI tool for running ClickHouse schema migrations"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+readme.workspace = true
+keywords.workspace = true
+categories = ["database", "command-line-utilities"]
+
+[[bin]]
+name = "ch-migrate"
+path = "src/main.rs"
+# Disable rustdoc for the binary to avoid an output-path collision
+# with the `ch-migrate` library crate (both lower to `ch_migrate`).
+doc = false
+
+[dependencies]
+ch-migrate-core = { path = "../ch-migrate-core", version = "0.1.0" }
+clickhouse = "0.14"
+clap = { version = "4", features = ["derive", "env"] }
+tokio = { version = "1", features = ["full"] }
+chrono = "0.4"
