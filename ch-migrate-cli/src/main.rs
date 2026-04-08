@@ -5,26 +5,31 @@ use ch_migrate_core::migrator::{MigrationStatus, Migrator};
 use clap::{Parser, Subcommand};
 
 #[derive(Parser)]
-#[command(name = "ch-migrate", version, about = "ClickHouse migration tool")]
+#[command(name = "chmx", version, about = "ClickHouse migration tool")]
 struct Cli {
     /// ClickHouse HTTP URL
-    #[arg(long, env = "CH_MIGRATE_URL", default_value = "http://localhost:8123")]
+    #[arg(
+        long,
+        env = "CH_MIGRATE_URL",
+        hide_env_values = true,
+        default_value = "http://localhost:8123"
+    )]
     url: String,
 
     /// ClickHouse database name
-    #[arg(long, env = "CH_MIGRATE_DATABASE")]
+    #[arg(long, env = "CH_MIGRATE_DATABASE", hide_env_values = true)]
     database: Option<String>,
 
     /// ClickHouse user
-    #[arg(long, env = "CH_MIGRATE_USER")]
+    #[arg(long, env = "CH_MIGRATE_USER", hide_env_values = true)]
     user: Option<String>,
 
     /// ClickHouse password
-    #[arg(long, env = "CH_MIGRATE_PASSWORD")]
+    #[arg(long, env = "CH_MIGRATE_PASSWORD", hide_env_values = true)]
     password: Option<String>,
 
     /// Cluster name for ON CLUSTER support
-    #[arg(long, env = "CH_MIGRATE_CLUSTER")]
+    #[arg(long, env = "CH_MIGRATE_CLUSTER", hide_env_values = true)]
     cluster: Option<String>,
 
     /// Migration tracking table name

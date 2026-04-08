@@ -53,13 +53,16 @@ async fn main() {
 cargo install ch-migrate-cli
 
 # Create a new migration
-ch-migrate add create_events_table
+chmx add create_events_table
 
-# Apply pending migrations
-ch-migrate run --url http://localhost:8123 --database mydb
+# Apply pending migrations (uses ./migrations by default; pass -d to override)
+chmx run --url http://localhost:8123 --database mydb
+
+# Use a custom migrations directory
+chmx run -d path/to/migrations --url http://localhost:8123 --database mydb
 
 # Show status
-ch-migrate info --url http://localhost:8123 --database mydb
+chmx info --url http://localhost:8123 --database mydb
 ```
 
 ## Migration files
