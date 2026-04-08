@@ -16,7 +16,7 @@ path = "src/main.rs"
 
 [dependencies]
 ch-migrate-core = { path = "../ch-migrate-core", version = "0.1.0" }
-clickhouse = "0.14"
+clickhouse = "0.13"
 clap = { version = "4", features = ["derive", "env"] }
 tokio = { version = "1", features = ["full"] }
 chrono = "0.4"

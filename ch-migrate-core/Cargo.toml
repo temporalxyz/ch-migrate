@@ -11,7 +11,7 @@ keywords.workspace = true
 categories.workspace = true
 
 [dependencies]
-clickhouse = "0.14"
+clickhouse = "0.13"
 serde = { version = "1", features = ["derive"] }
 sha2 = "0.10"
 hex = "0.4"
