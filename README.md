@@ -7,7 +7,7 @@ A Rust library and CLI for running ClickHouse schema migrations, inspired by [sq
 - **Compile-time embedding** via `migrate!()` proc macro — SQL files are baked into your binary
 - **Runtime discovery** via CLI — apply migrations from a directory
 - **SHA-256 checksums** — detects if a previously applied migration file has been modified
-- **ON CLUSTER support** — optional `ReplicatedMergeTree` tracking table for clustered setups
+- **ON CLUSTER support** — optional `ReplicatedReplacingMergeTree` tracking table for clustered setups
 - **Forward-only** — no down migrations; ClickHouse DDL isn't transactional anyway
 
 ## Quick start
@@ -113,7 +113,7 @@ The `migrate!()` proc macro discovers migration files at compile time. Cargo can
 
 Pass `--cluster <name>` (CLI) or call `.with_cluster("name")` (library) to enable:
 
-- Tracking table is created with `ON CLUSTER` and `ReplicatedMergeTree`
+- Tracking table is created with `ON CLUSTER` and `ReplicatedReplacingMergeTree`
 - Your migration SQL should include `ON CLUSTER` clauses where needed
 
 ## Tracking table
@@ -128,9 +128,15 @@ CREATE TABLE IF NOT EXISTS _ch_migrations (
     installed_on     DateTime DEFAULT now(),
     success          Bool,
     execution_time_ms UInt64
-) ENGINE = MergeTree()
+) ENGINE = ReplacingMergeTree(installed_on)
 ORDER BY version
 ```
+
+`ReplacingMergeTree(installed_on)` means a later INSERT for the same `version`
+supersedes an earlier one, and `SELECT ... FINAL` collapses to the most recent
+row per `version` (used internally when reading applied migrations). Under
+`ON CLUSTER`, the engine becomes `ReplicatedReplacingMergeTree(...)` with the
+same dedup column.
 
 ## Concurrency
 

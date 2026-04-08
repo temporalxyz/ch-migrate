@@ -240,16 +240,20 @@ impl Migrator {
             success          Bool,\
             execution_time_ms UInt64";
 
+        // ReplacingMergeTree(installed_on) lets a later INSERT for the same
+        // version supersede an earlier one (e.g. a manual fix-up row), with
+        // SELECT ... FINAL collapsing to the most recent installed_on per
+        // version. Plain MergeTree does not support FINAL.
         match &self.cluster {
             None => format!(
                 "CREATE TABLE IF NOT EXISTS {table} ({columns}) \
-                 ENGINE = MergeTree() ORDER BY version"
+                 ENGINE = ReplacingMergeTree(installed_on) ORDER BY version"
             ),
             Some(cluster) => format!(
                 "CREATE TABLE IF NOT EXISTS {table} \
                  ON CLUSTER '{cluster}' ({columns}) \
-                 ENGINE = ReplicatedMergeTree(\
-                 '/clickhouse/tables/{{shard}}/{table}', '{{replica}}') \
+                 ENGINE = ReplicatedReplacingMergeTree(\
+                 '/clickhouse/tables/{{shard}}/{table}', '{{replica}}', installed_on) \
                  ORDER BY version"
             ),
         }
@@ -407,7 +411,7 @@ mod tests {
     fn create_tracking_table_single_node() {
         let m = Migrator::new(&[]);
         let sql = m.create_tracking_table_sql();
-        assert!(sql.contains("MergeTree()"));
+        assert!(sql.contains("ReplacingMergeTree(installed_on)"));
         assert!(!sql.contains("ON CLUSTER"));
         assert!(!sql.contains("Replicated"));
     }
@@ -417,7 +421,8 @@ mod tests {
         let m = Migrator::new(&[]).with_cluster("my_cluster");
         let sql = m.create_tracking_table_sql();
         assert!(sql.contains("ON CLUSTER 'my_cluster'"));
-        assert!(sql.contains("ReplicatedMergeTree"));
+        assert!(sql.contains("ReplicatedReplacingMergeTree"));
+        assert!(sql.contains("installed_on"));
         assert!(sql.contains("{shard}"));
         assert!(sql.contains("{replica}"));
     }
